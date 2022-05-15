@@ -5,15 +5,14 @@ import Http from "../utils/Http"
 import {useNavigate} from "react-router-dom"
 import {ethers} from "ethers"
 
-const domain = process.env.REACT_APP_WALLY_API
+export const domain = process.env.REACT_APP_WALLY_API
 
 function Home() {
 
     let navigate = useNavigate();
-    const [token, setToken] = useState("")
     const [show, setShow] = useState(false);
     const [notification, setNotification] = useState({title: '', body: ''});
-    const [isFcmOn, setFcmOn] = useState(false);
+    const [isFcmOn, setFcmOn] = useState(localStorage.getItem("fcm") != null);
 
     useEffect(() => {
         if (localStorage.getItem("wallet-private") == null) {
@@ -30,10 +29,10 @@ function Home() {
             console.log("signature: ", signature)
 
             Http.post(domain!, "/wallet/login", null, {address, signature}, (response: any) => {
-                setToken(response.token)
+                localStorage.setItem("token",response.token)
             }, (error) => {
                 Http.post(domain!, "/wallet/eth/register", null, {address, signature}, (response: any) => {
-                    setToken(response.token)
+                    localStorage.setItem("token",response.token)
                 }, (error) => {
                     console.error(error)
                 })

@@ -3,6 +3,8 @@
 // Your web app's Firebase configuration
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import Http from "../utils/Http"
+import {domain} from "../views/Home"
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -23,7 +25,13 @@ export const fetchToken = (setTokenFound: (fond:boolean)=> void) => {
     return getToken(messaging, {vapidKey: process.env.FIREBASE_CERTIFICATE_KEY}).then((currentToken) => {
         if (currentToken) {
             console.log('current token for client: ', currentToken);
-            setTokenFound(true);
+            const walletToken = localStorage.getItem("token")!
+            Http.post(domain!, "/wallet/connect-fcm", walletToken, {token: currentToken}, (response: any) => {
+                localStorage.setItem("fcm", currentToken)
+                setTokenFound(true);
+            }, (error) => {
+                console.error(error)
+            })
             // Track the token -> client mapping, by sending to backend server
             // show on the UI that permission is secured
         } else {
