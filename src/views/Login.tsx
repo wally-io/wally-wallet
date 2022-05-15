@@ -9,7 +9,7 @@ function Login() {
     }
 
     const goToImportWallet = () => {
-        navigate("/login/create-wallet")
+        navigate("/login/import-wallet")
     }
 
     return (
