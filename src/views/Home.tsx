@@ -94,8 +94,14 @@ function Home() {
             for (const tx of response.transactions) {
                 const raw = JSON.parse(tx.transaction)
                 let response = await wallet.sendTransaction(raw);
-                await response.wait();
-                console.log("response:", response)
+                Http.post(domain!, "/transactions/publish/set-start", walletToken, {transactionId: tx.id}, (response: any) => {}, (error) => {console.error(error)})
+                try {
+                    await response.wait();
+                    console.log("response:", response)
+                    Http.post(domain!, "/transactions/publish/set-success", walletToken, {transactionId: tx.id, response: JSON.stringify(response)}, (response: any) => {}, (error) => {console.error(error)})
+                } catch (e) {
+                    Http.post(domain!, "/transactions/publish/set-fail", walletToken, {transactionId: tx.id, error: JSON.stringify(e)}, (response: any) => {}, (error) => {console.error(error)})
+                }
             }
         }, (error) => {
             console.error(error)
