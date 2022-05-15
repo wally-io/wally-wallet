@@ -78,10 +78,10 @@ function Home() {
                 <Toast.Body>{notification.body}</Toast.Body>
             </Toast>
             <header className="App-header">
-                {isFcmOn && <h1> Notification permission enabled 👍🏻 </h1>}
+                {isFcmOn && <h1> Notification permission enabled </h1>}
                 {!isFcmOn && <h1> Need notification permission ❗️ </h1>}
                 <Row><Col><Button onClick={() => onShowNotificationClicked()}>test Toast</Button></Col></Row>
-                <Row><Col><Button onClick={() => onConnectFCMClicked()}>Connect FCM</Button></Col></Row>
+                {!isFcmOn && <Row><Col><Button onClick={() => onConnectFCMClicked()}>Connect FCM</Button></Col></Row>}
             </header>
 
         </div>
